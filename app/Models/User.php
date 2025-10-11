@@ -94,4 +94,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserHistoryPoint::class, 'user_id', 'id');
     }
+
+    /**
+     * Get all of the voucher for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function voucher()
+    {
+        return $this->hasMany(UserVoucher::class, 'user_id', 'id');
+    }
 }
