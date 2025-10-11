@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
+            SpaServiceSeeder::class,
         ]);
 
         // User::factory(10)->create();

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('duration'); // duration in minutes
             $table->string('image')->nullable();
+            $table->string('points')->default('0');
             $table->timestamps();
         });
     }
