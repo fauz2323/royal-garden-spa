@@ -87,6 +87,7 @@ class AdminSpaServiceController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
+
         $service->update($request->only([
             'name',
             'description',

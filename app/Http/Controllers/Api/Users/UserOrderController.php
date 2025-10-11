@@ -7,6 +7,8 @@ use App\Http\Requests\StoreUserOrderRequest;
 use App\Http\Requests\UpdateUserOrderRequest;
 use App\Models\UserOrders;
 use App\Models\SpaService;
+use App\Models\UserHistoryPoint;
+use App\Models\UserPoint;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +46,6 @@ class UserOrderController extends Controller
     public function store(StoreUserOrderRequest $request): JsonResponse
     {
         try {
-
             // Get the spa service to get the price
             $spaService = SpaService::findOrFail($request->spa_services_id);
 
@@ -67,6 +68,25 @@ class UserOrderController extends Controller
                 'status' => 'pending'
             ]);
 
+
+            $point = UserPoint::where('user_id', Auth::id())->first();
+            if ($point) {
+                $point->points += $spaService->points; // Add points for each order
+                $point->save();
+
+                $history = new UserHistoryPoint();
+                $history->user_id = Auth::id();
+                $history->points = $spaService->points;
+                $history->description = 'Points earned from ordering ' . $spaService->name;
+                $history->save();
+            } else {
+                UserPoint::create([
+                    'user_id' => Auth::id(),
+                    'points' => $spaService->points,
+                    'status' => 'active',
+                ]);
+            }
+
             // Load the relationships for response
             $order->load(['spa_service', 'user']);
 
@@ -87,12 +107,12 @@ class UserOrderController extends Controller
     /**
      * Display the specified order.
      */
-    public function show($id): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         try {
             $order = UserOrders::with(['spa_service', 'user'])
                 ->where('user_id', Auth::id())
-                ->findOrFail($id);
+                ->findOrFail($request->id);
 
             return response()->json([
                 'success' => true,
@@ -108,48 +128,16 @@ class UserOrderController extends Controller
         }
     }
 
-    /**
-     * Update the specified order in storage.
-     * Only allow updating specific fields and only if order is still pending
-     */
-    public function update(UpdateUserOrderRequest $request, $id): JsonResponse
-    {
-        try {
-            $order = UserOrders::where('user_id', Auth::id())->findOrFail($id);
 
-            // Only allow updates if order is still pending
-            if ($order->status !== 'pending') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Cannot update order that is no longer pending'
-                ], 400);
-            }
-
-            $order->update($request->only(['time_service', 'date_service', 'notes']));
-            $order->load(['spa_service', 'user']);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Order updated successfully',
-                'data' => $order
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update order',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
 
     /**
      * Cancel the specified order.
      * Only allow cancellation if order is still pending
      */
-    public function cancel($id): JsonResponse
+    public function cancel(Request $request): JsonResponse
     {
         try {
-            $order = UserOrders::where('user_id', Auth::id())->findOrFail($id);
+            $order = UserOrders::where('user_id', Auth::id())->findOrFail($request->id);
 
             // Only allow cancellation if order is still pending
             if ($order->status !== 'pending') {

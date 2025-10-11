@@ -30,10 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/services', [UserOrderController::class, 'getAvailableServices']);
         Route::get('/orders', [UserOrderController::class, 'index']);
-        Route::post('/orders', [UserOrderController::class, 'store']);
-        Route::get('/orders/{id}', [UserOrderController::class, 'show']);
-        Route::put('/orders/{id}', [UserOrderController::class, 'update']);
-        Route::post('/orders/{id}/cancel', [UserOrderController::class, 'cancel']);
+        Route::post('/orders/make', [UserOrderController::class, 'store']);
+        Route::post('/orders/view', [UserOrderController::class, 'show']);
+        Route::post('/orders/cancel', [UserOrderController::class, 'cancel']);
 
         Route::post('update-profile', [UserSettingsController::class, 'updateProfile']);
         Route::post('update-password', [UserSettingsController::class, 'updatePassword']);
@@ -44,13 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('spa-services', AdminSpaServiceController::class);
         Route::post('spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
 
-        // Order Management Routes
-        Route::apiResource('orders', AdminOrderController::class);
-        Route::post('orders/{id}/accept', [AdminOrderController::class, 'accept']);
-        Route::post('orders/{id}/reject', [AdminOrderController::class, 'reject']);
-        Route::post('orders/{id}/start', [AdminOrderController::class, 'startService']);
-        Route::post('orders/{id}/complete', [AdminOrderController::class, 'complete']);
-        Route::get('orders-statistics', [AdminOrderController::class, 'statistics']);
+        //admin order routes
+        Route::get('/orders', [AdminOrderController::class, 'index']);
+        Route::post('/orders/view', [AdminOrderController::class, 'show']);
+        Route::post('/orders/changeStatus', [AdminOrderController::class, 'changeStatus']);
+        Route::get('/orders/statistics', [AdminOrderController::class, 'statistics']);
 
         Route::post('update-profile', [AdminSettingsController::class, 'updateProfile']);
         Route::post('update-password', [AdminSettingsController::class, 'updatePassword']);

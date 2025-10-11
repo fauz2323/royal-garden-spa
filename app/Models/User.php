@@ -84,4 +84,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserPoint::class, 'user_id', 'id');
     }
+
+    /**
+     * Get all of the historyPoints for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historyPoints()
+    {
+        return $this->hasMany(UserHistoryPoint::class, 'user_id', 'id');
+    }
 }
