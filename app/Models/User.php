@@ -64,4 +64,24 @@ class User extends Authenticatable
     {
         return $this->role === 'customer';
     }
+
+    /**
+     * Get all of the orders for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(UserOrders::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the point associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function point()
+    {
+        return $this->hasOne(UserPoint::class, 'user_id', 'id');
+    }
 }

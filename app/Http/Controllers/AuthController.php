@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Models\UserPoint;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,12 @@ class AuthController extends Controller
             'role' => 'customer', // Default role for new users
         ]);
 
+        $point = UserPoint::create([
+            'user_id' => $user->id,
+            'points' => 0,
+            'status' => 'active',
+        ]);
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -34,15 +41,18 @@ class AuthController extends Controller
             'message' => 'User registered successfully',
             'data' => [
                 'user' => [
-                    'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'phone' => $user->phone,
                     'role' => $user->role,
                     'created_at' => $user->created_at,
+
                 ],
-                'access_token' => $token,
-                'token_type' => 'Bearer',
+                'point' => [
+                    'points' => $point->points,
+                    'status' => $point->status,
+                ],
+                'token' => $token,
             ]
         ], Response::HTTP_CREATED);
     }
@@ -71,14 +81,12 @@ class AuthController extends Controller
             'message' => 'Login successful',
             'data' => [
                 'user' => [
-                    'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'phone' => $user->phone,
                     'role' => $user->role,
                 ],
-                'access_token' => $token,
-                'token_type' => 'Bearer',
+                'token' => $token,
             ]
         ]);
     }
@@ -100,21 +108,24 @@ class AuthController extends Controller
     /**
      * Get authenticated user profile
      */
-    public function profile(Request $request)
+    public function profile()
     {
+        $user = User::with('point')->find(Auth::user()->id);
         return response()->json([
             'success' => true,
             'data' => [
                 'user' => [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'phone' => $request->user()->phone,
-                    'role' => $request->user()->role,
-                    'email_verified_at' => $request->user()->email_verified_at,
-                    'created_at' => $request->user()->created_at,
-                    'updated_at' => $request->user()->updated_at,
-                ]
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'role' => $user->role,
+                    'created_at' => $user->created_at,
+                ],
+                'point' => [
+                    'points' => $user->point ? $user->point->points : 0,
+                    'status' => $user->point ? $user->point->status : 'inactive',
+                ],
             ]
         ]);
     }
