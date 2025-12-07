@@ -68,25 +68,6 @@ class UserOrderController extends Controller
                 'status' => 'pending'
             ]);
 
-
-            $point = UserPoint::where('user_id', Auth::id())->first();
-            if ($point) {
-                $point->points += $spaService->points; // Add points for each order
-                $point->save();
-
-                $history = new UserHistoryPoint();
-                $history->user_id = Auth::id();
-                $history->points = $spaService->points;
-                $history->description = 'Points earned from ordering ' . $spaService->name;
-                $history->save();
-            } else {
-                UserPoint::create([
-                    'user_id' => Auth::id(),
-                    'points' => $spaService->points,
-                    'status' => 'active',
-                ]);
-            }
-
             // Load the relationships for response
             $order->load(['spa_service', 'user']);
 
@@ -159,31 +140,6 @@ class UserOrderController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to cancel order',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Get available spa services for ordering
-     */
-    public function getAvailableServices(): JsonResponse
-    {
-        try {
-            $services = SpaService::where('is_active', true)
-                ->select('id', 'uuid', 'name', 'description', 'price', 'duration')
-                ->orderBy('name')
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Available services retrieved successfully',
-                'data' => $services
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve services',
                 'error' => $e->getMessage()
             ], 500);
         }

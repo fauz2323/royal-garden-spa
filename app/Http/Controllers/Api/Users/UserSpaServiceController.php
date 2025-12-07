@@ -16,4 +16,13 @@ class UserSpaServiceController extends Controller
             'data' => $services
         ]);
     }
+
+    function getServicesDetail($id)
+    {
+        $services = SpaService::where('is_active', true)->where('uuid', $id)->first();
+        return response()->json([
+            'success' => true,
+            'data' => $services
+        ]);
+    }
 }

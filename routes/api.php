@@ -27,8 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Customer routes
     Route::middleware('role:customer')->prefix('customer')->group(function () {
         Route::get('/services', [UserSpaServiceController::class, 'getServicesList']);
+        Route::get('/services/{id}/detail', [UserSpaServiceController::class, 'getServicesDetail']);
 
-        Route::get('/services', [UserOrderController::class, 'getAvailableServices']);
+        // Route::get('/services', [UserOrderController::class, 'getAvailableServices']);
         Route::get('/orders', [UserOrderController::class, 'index']);
         Route::post('/orders/make', [UserOrderController::class, 'store']);
         Route::post('/orders/view', [UserOrderController::class, 'show']);
