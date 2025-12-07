@@ -34,4 +34,18 @@ class UsersPointsController extends Controller
             'data' => $history
         ], 200);
     }
+
+    function leaderboards()
+    {
+        $data = UserPoint::with('user')
+            ->orderBy('points', 'desc')
+            ->take(10)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Leaderboard retrieved successfully',
+            'data' => $data
+        ], 200);
+    }
 }

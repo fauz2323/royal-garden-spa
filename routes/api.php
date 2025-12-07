@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\AdminSettingsController;
 use App\Http\Controllers\Api\Users\UserOrderController;
 use App\Http\Controllers\Api\Users\UserSettingsController;
 use App\Http\Controllers\Api\Users\UserSpaServiceController;
+use App\Http\Controllers\Api\Users\UsersPointsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('update-profile', [UserSettingsController::class, 'updateProfile']);
         Route::post('update-password', [UserSettingsController::class, 'updatePassword']);
+
+        Route::get('/points', [UsersPointsController::class, 'index']);
+        Route::get('/points/history', [UsersPointsController::class, 'getHistory']);
+        Route::get('/points/leaderboards', [UsersPointsController::class, 'leaderboards']);
     });
 
     // Admin only routes
