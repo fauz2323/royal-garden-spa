@@ -16,28 +16,25 @@ use Illuminate\Support\Facades\Auth;
 class AdminOrderController extends Controller
 {
 
-    public function index(): JsonResponse
+    public function index($status): JsonResponse
     {
         try {
+            if ($status == 'pending') {
+                $statuses = ['pending'];
+            } else {
+                $statuses = ['confirmed', 'in_progress', 'completed', 'cancelled', 'rejected', 'pending'];
+            }
             $query = UserOrders::with(['user', 'spa_service']);
 
-            $query->where('status', 'pending');
+            $query->whereIn('status', $statuses);
 
             $orders = $query->orderBy('created_at', 'desc')
-                ->paginate(15);
+                ->get();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Orders retrieved successfully',
-                'data' => $orders->items(),
-                'pagination' => [
-                    'current_page' => $orders->currentPage(),
-                    'total_pages' => $orders->lastPage(),
-                    'per_page' => $orders->perPage(),
-                    'total' => $orders->total(),
-                    'from' => $orders->firstItem(),
-                    'to' => $orders->lastItem()
-                ]
+                'data' => $orders,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
