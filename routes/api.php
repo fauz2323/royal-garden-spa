@@ -51,16 +51,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
         //user management
         Route::get('/users', [App\Http\Controllers\Api\Admin\UsersController::class, 'index']);
+        Route::post('/users/detail', [App\Http\Controllers\Api\Admin\UsersController::class, 'detail']);
         Route::get('/users/points', [App\Http\Controllers\Api\Admin\UsersController::class, 'points']);
 
-        Route::apiResource('spa-services', AdminSpaServiceController::class);
-        Route::post('spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
+        // Route::apiResource('spa-services', AdminSpaServiceController::class);
+        // Route::post('spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
+        Route::get('/spa-services', [AdminSpaServiceController::class, 'index']);
+        Route::get('/spa-service/detail/{id}', [AdminSpaServiceController::class, 'show']);
+        Route::post('/spa-services/create', [AdminSpaServiceController::class, 'store']);
+        Route::post('/spa-services/{id}/update', [AdminSpaServiceController::class, 'update']);
+        Route::post('/spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
+        Route::delete('/spa-services/{id}/delete', [AdminSpaServiceController::class, 'destroy']);
 
         //admin order routes
         Route::get('/orders/{status}', [AdminOrderController::class, 'index']);
         Route::post('/orders/view', [AdminOrderController::class, 'show']);
         Route::post('/orders/changeStatus', [AdminOrderController::class, 'changeStatus']);
-        Route::get('/orders/statistics', [AdminOrderController::class, 'statistics']);
+        // Route::get('/orders/statistics', [AdminOrderController::class, 'statistics']);
 
         Route::post('update-profile', [AdminSettingsController::class, 'updateProfile']);
         Route::post('update-password', [AdminSettingsController::class, 'updatePassword']);

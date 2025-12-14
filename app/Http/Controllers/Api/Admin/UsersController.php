@@ -22,6 +22,17 @@ class UsersController extends Controller
         ]);
     }
 
+    function detail(Request $request)
+    {
+        $users = User::select('id', 'name', 'email', 'role', 'phone', 'created_at')->with('point')->where('email', $request->email)->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer users retrieved successfully',
+            'data' => $users
+        ]);
+    }
+
     function points()
     {
         $data = UserPoint::with('user')

@@ -35,7 +35,9 @@ class SpaService extends Model
         'description',
         'price',
         'duration',
-        'is_active'
+        'is_active',
+        'image',
+        'points',
     ];
 
     /**

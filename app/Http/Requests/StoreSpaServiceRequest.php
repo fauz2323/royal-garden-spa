@@ -26,7 +26,9 @@ class StoreSpaServiceRequest extends FormRequest
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'image' => 'string',
+            'points' => 'nullable|integer|min:0'
         ];
     }
 
@@ -45,7 +47,10 @@ class StoreSpaServiceRequest extends FormRequest
             'duration.required' => 'Durasi layanan wajib diisi.',
             'duration.integer' => 'Durasi harus berupa angka bulat.',
             'duration.min' => 'Durasi minimal 1 menit.',
-            'is_active.boolean' => 'Status aktif harus berupa true atau false.'
+            'is_active.boolean' => 'Status aktif harus berupa true atau false.',
+            'points.integer' => 'Poin harus berupa angka bulat.',
+            'points.min' => 'Poin tidak boleh kurang dari 0.',
+            'image.string' => 'Gambar harus berupa string.',
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\AdminUpdateOrderRequest;
 use App\Models\UserOrders;
 use App\Models\SpaService;
 use App\Models\User;
+use App\Models\UserHistoryPoint;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -33,7 +34,7 @@ class AdminOrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Orders retrieved successfully',
+                'message' => 'Orders retrieved successfullssy',
                 'data' => $orders,
             ], 200);
         } catch (\Exception $e) {
@@ -53,7 +54,7 @@ class AdminOrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Order retrieved successfully',
+                'message' => 'Order retrieved successfullyss',
                 'data' => $order
             ], 200);
         } catch (\Exception $e) {
@@ -92,21 +93,35 @@ class AdminOrderController extends Controller
     {
         $request->validate([
             'id' => 'required|integer|exists:user_orders,id',
-            'status' => 'required|string|in:confirmed,in_progress,completed,cancelled,rejected'
+            'status' => 'required|string|in:confirmed,in_progress,completed,rejected'
         ]);
 
         try {
             $order = UserOrders::findOrFail($request->id);
 
-            if ($order->status !== 'pending') {
+            if ($order->status === 'completed' || $order->status === 'cancelled' || $order->status === 'rejected') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Only pending orders can be accepted'
+                    'message' => 'Cannot change status of completed, cancelled, or rejected orders'
                 ], 400);
             }
 
             $order->update(['status' => $request->status]);
             $order->load(['spa_service', 'user']);
+
+            if ($request->status == 'completed') {
+                $user = User::find($order->user_id);
+                if ($user) {
+                    $user->point->points += $order->spa_service->points;
+                    $user->point->save();
+
+                    $userHistoryPoints = new UserHistoryPoint();
+                    $userHistoryPoints->user_id = $user->id;
+                    $userHistoryPoints->points = $order->spa_service->points;
+                    $userHistoryPoints->description = 'Points earned from completing order #' . $order->id;
+                    $userHistoryPoints->save();
+                }
+            }
 
             return response()->json([
                 'success' => true,
