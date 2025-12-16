@@ -104,4 +104,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserVoucher::class, 'user_id', 'id');
     }
+
+    /**
+     * Get all of the mission for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function mission()
+    {
+        return $this->hasMany(UserMission::class, 'user_id', 'id');
+    }
 }

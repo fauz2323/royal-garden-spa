@@ -23,8 +23,8 @@ class StoreUserOrderRequest extends FormRequest
     {
         return [
             'spa_services_id' => 'required|exists:spa_services,id',
-            'time_service' => 'required|string|date_format:H:i',
-            'date_service' => 'required|date|after_or_equal:today',
+            'time_service' => 'required|string',
+            'date_service' => 'required',
             'notes' => 'nullable|string|max:1000'
         ];
     }

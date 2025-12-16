@@ -17,4 +17,14 @@ class UserVoucher extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    /**
+     * Get the voucher that owns the UserVoucher
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class, 'voucher_id', 'id');
+    }
 }

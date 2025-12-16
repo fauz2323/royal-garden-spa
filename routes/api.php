@@ -42,6 +42,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/points', [UsersPointsController::class, 'index']);
         Route::get('/points/history', [UsersPointsController::class, 'getHistory']);
         Route::get('/points/leaderboards', [UsersPointsController::class, 'leaderboards']);
+        Route::get('/points/voucher-shop', [UsersPointsController::class, 'getVoucherShop']);
+        Route::get('/points/reward', [UsersPointsController::class, 'reward']);
+        Route::post('/points/redeem-voucher', [UsersPointsController::class, 'reedemVoucher']);
+
+        //user missions
+        Route::get('/mission/index', [App\Http\Controllers\Api\Users\MissionController::class, 'index']);
+        Route::get('/missions/claim/{id}', [App\Http\Controllers\Api\Users\MissionController::class, 'claim']);
     });
 
     // Admin only routes
@@ -71,5 +78,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('update-profile', [AdminSettingsController::class, 'updateProfile']);
         Route::post('update-password', [AdminSettingsController::class, 'updatePassword']);
+
+        //admin mission routes
+        Route::get('/missions', [App\Http\Controllers\Api\Admin\MissionAdminController::class, 'index']);
+
+        //admin voucher routes
+        Route::get('/vouchers', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'index']);
     });
 });

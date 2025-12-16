@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Users;
 use App\Http\Controllers\Controller;
 use App\Models\UserHistoryPoint;
 use App\Models\UserPoint;
+use App\Models\UserVoucher;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,6 +48,73 @@ class UsersPointsController extends Controller
             'success' => true,
             'message' => 'Leaderboard retrieved successfully',
             'data' => $data
+        ], 200);
+    }
+
+    function getVoucherShop()
+    {
+        $vouchers = Voucher::where('expiry_date', '>=', date('Y-m-d'))
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Vouchers retrieved successfully',
+            'data' => $vouchers
+        ], 200);
+    }
+
+    function reedemVoucher(Request $request)
+    {
+        $request->validate([
+            'voucher_id' => 'required|exists:vouchers,id',
+        ]);
+
+        $id = $request->voucher_id;
+        $voucher = Voucher::find($id);
+        $points = UserPoint::where('user_id', Auth::id())->first();
+
+        if ($voucher->price >= $points->points) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Insufficient points to redeem this voucher',
+            ], 400);
+        }
+
+        // Deduct points
+        $points->points -= $voucher->price;
+        $points->save();
+
+        $userVoucer = new UserVoucher();
+        $userVoucer->user_id = Auth::id();
+        $userVoucer->voucher_id = $voucher->id;
+        $userVoucer->status = 'unused';
+        $userVoucer->save();
+
+        $userHistoryPoint = new UserHistoryPoint();
+        $userHistoryPoint->user_id = Auth::id();
+        $userHistoryPoint->points = -$voucher->price;
+        $userHistoryPoint->description = 'Reedem voucher: ' . $voucher->name;
+        $userHistoryPoint->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Voucher redeemed successfully',
+            'data' => $userVoucer
+        ], 200);
+    }
+
+    function reward()
+    {
+        $reward = UserVoucher::with('voucher')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User rewards retrieved successfully',
+            'data' => $reward
         ], 200);
     }
 }
