@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminOrderController extends Controller
 {
@@ -184,6 +184,6 @@ class AdminOrderController extends Controller
 
     function getExcelOrder()
     {
-        return Excel::download(new UsersOrdersExport(), 'orders.xlsx');
+        return Excel::download(new UsersOrdersExport, 'orders.xlsx');
     }
 }
