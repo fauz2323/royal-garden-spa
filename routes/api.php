@@ -88,5 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         //admin voucher routes
         Route::get('/vouchers', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'index']);
+        Route::post('/vouchers/create', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'create']);
+        Route::post('/vouchers/detail', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'detail']);
     });
 });

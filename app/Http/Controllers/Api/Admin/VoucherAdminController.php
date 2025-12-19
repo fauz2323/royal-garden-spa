@@ -18,4 +18,42 @@ class VoucherAdminController extends Controller
             'data' => $vouchers
         ]);
     }
+
+    function create(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|string|max:255',
+            'discount_amount' => 'required|numeric',
+            'expiry_date' => 'required|date',
+        ]);
+
+        $voucher = Voucher::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'discount_amount' => $request->discount_amount,
+            'expiry_date' => $request->expiry_date,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Voucher created successfully',
+            'data' => $voucher
+        ]);
+    }
+
+    function detail(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:vouchers,id',
+        ]);
+
+        $voucher = Voucher::find($request->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Voucher retrieved successfully',
+            'data' => $voucher
+        ]);
+    }
 }
