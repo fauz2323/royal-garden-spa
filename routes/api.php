@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/spa-services/{id}/update', [AdminSpaServiceController::class, 'update']);
         Route::post('/spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
         Route::delete('/spa-services/{id}/delete', [AdminSpaServiceController::class, 'destroy']);
+        Route::get('/orders/export', [AdminOrderController::class, 'getExcelOrder']);
 
         //admin order routes
         Route::get('/orders/{status}', [AdminOrderController::class, 'index']);

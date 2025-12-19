@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exports\UsersOrdersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminCreateOrderRequest;
 use App\Http\Requests\AdminUpdateOrderRequest;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Excel;
 
 class AdminOrderController extends Controller
 {
@@ -178,5 +180,10 @@ class AdminOrderController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    function getExcelOrder()
+    {
+        return Excel::download(new UsersOrdersExport(), 'orders.xlsx');
     }
 }
