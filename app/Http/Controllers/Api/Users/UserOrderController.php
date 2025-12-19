@@ -9,6 +9,7 @@ use App\Models\UserOrders;
 use App\Models\SpaService;
 use App\Models\UserHistoryPoint;
 use App\Models\UserPoint;
+use App\Services\firebaseServices;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -70,6 +71,14 @@ class UserOrderController extends Controller
 
             // Load the relationships for response
             $order->load(['spa_service', 'user']);
+
+            $firebaseService = new firebaseServices();
+            $firebaseService->sendToTopic(
+                'admin_notifications',
+                'New Order Created',
+                'A new order has been created by ' . Auth::user()->name,
+                ['order_id' => (string)$order->id]
+            );
 
             return response()->json([
                 'success' => true,

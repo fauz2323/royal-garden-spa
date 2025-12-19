@@ -42,10 +42,10 @@ class UserSettingsController extends Controller
 
         $user = User::find(Auth::user()->id);
 
-        if (Hash::check($request->current_password, $user->password)) {
+        if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Current password is incorrect'
+                'message' => 'Current password is incorrect',
             ], 400);
         }
 

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/orders/export', [AdminOrderController::class, 'getExcelOrder']);
+Route::post('/set-fcm-token', [App\Http\Controllers\FcmController::class, 'setTokenUser']);
 
 
 // Protected routes (authentication required)
