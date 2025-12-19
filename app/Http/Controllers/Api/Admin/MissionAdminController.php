@@ -18,4 +18,27 @@ class MissionAdminController extends Controller
             'data' => $missions
         ]);
     }
+
+    function create(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'points' => 'required|integer|min:0',
+            'goal' => 'required|integer|min:0',
+        ]);
+
+        $mission = Mission::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'points' => $request->points,
+            'goal' => $request->goal,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mission created successfully',
+            'data' => $mission
+        ]);
+    }
 }
