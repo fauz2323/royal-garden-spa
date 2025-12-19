@@ -64,7 +64,7 @@ class UserOrderController extends Controller
                 'price' => $spaService->price + rand(100, 999),
                 'time_service' => $request->time_service,
                 'date_service' => $request->date_service,
-                'notes' => $request->notes,
+                'notes' => $request->notes ?? '-',
                 'status' => 'pending'
             ]);
 
