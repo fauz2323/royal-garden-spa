@@ -84,6 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
         //admin mission routes
         Route::get('/missions', [App\Http\Controllers\Api\Admin\MissionAdminController::class, 'index']);
         Route::post('/missions/create', [App\Http\Controllers\Api\Admin\MissionAdminController::class, 'create']);
+        Route::post('/missions/detail', [App\Http\Controllers\Api\Admin\MissionAdminController::class, 'create']);
 
         //admin voucher routes
         Route::get('/vouchers', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'index']);

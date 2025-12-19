@@ -41,4 +41,19 @@ class MissionAdminController extends Controller
             'data' => $mission
         ]);
     }
+
+    function detail(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:missions,id',
+        ]);
+
+        $mission = Mission::find($request->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mission created successfully',
+            'data' => $mission
+        ]);
+    }
 }
