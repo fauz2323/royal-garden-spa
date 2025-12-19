@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 // Public routes (no authentication required)
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/orders/export', [AdminOrderController::class, 'getExcelOrder']);
+
 
 // Protected routes (authentication required)
 Route::middleware('auth:sanctum')->group(function () {
@@ -85,6 +87,4 @@ Route::middleware('auth:sanctum')->group(function () {
         //admin voucher routes
         Route::get('/vouchers', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'index']);
     });
-
-    Route::get('/orders/export', [AdminOrderController::class, 'getExcelOrder']);
 });
