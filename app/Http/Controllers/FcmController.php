@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserFcmToken;
+use App\Services\firebaseServices;
 use Illuminate\Http\Request;
 
 class FcmController extends Controller
@@ -35,5 +36,18 @@ class FcmController extends Controller
         $fcmToken->save();
 
         return response()->json(['message' => 'FCM token saved successfully'], 200);
+    }
+
+    function testFcm()
+    {
+        $firebaseService = new firebaseServices();
+        $firebaseService->sendToTopic(
+            'admin_notifications',
+            'New Order Created',
+            'A new order has been created by ',
+            ['order_id' => 1]
+        );
+
+        return response()->json(['message' => 'FCM test notification sent'], 200);
     }
 }

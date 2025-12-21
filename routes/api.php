@@ -16,6 +16,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/orders/export', [AdminOrderController::class, 'getExcelOrder']);
 Route::post('/set-fcm-token', [App\Http\Controllers\FcmController::class, 'setTokenUser']);
+Route::get('/test-fcm', [App\Http\Controllers\FcmController::class, 'testFcm']);
 
 
 // Protected routes (authentication required)
