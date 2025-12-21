@@ -91,5 +91,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/vouchers', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'index']);
         Route::post('/vouchers/create', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'create']);
         Route::post('/vouchers/detail', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'detail']);
+
+        //admin user points
+        Route::get('points/user-points', [App\Http\Controllers\Api\Admin\AdminUserPointController::class, 'index']);
+        Route::post('points/add-points', [App\Http\Controllers\Api\Admin\AdminUserPointController::class, 'addPoints']);
     });
 });
