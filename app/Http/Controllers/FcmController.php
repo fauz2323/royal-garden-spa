@@ -45,7 +45,7 @@ class FcmController extends Controller
             'admin_notifications',
             'New Order Created',
             'A new order has been created by ',
-            ['order_id' => 1]
+            ['order_id' => json_encode(12345)]
         );
 
         return response()->json(['message' => 'FCM test notification sent'], 200);

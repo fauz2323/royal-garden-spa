@@ -1,18 +1,18 @@
-<?
+<?php
 
 namespace App\Services;
 
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging;
 
-final class firebaseServices
+final class FirebaseServices
 {
     protected Messaging $messaging;
 
     public function __construct()
     {
         $factory = (new Factory)
-            ->withServiceAccount(config('firebase.credentials'));
+            ->withServiceAccount(base_path('firebase.json'));
 
         $this->messaging = $factory->createMessaging();
     }

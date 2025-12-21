@@ -77,7 +77,7 @@ class UserOrderController extends Controller
                 'admin_notifications',
                 'New Order Created',
                 'A new order has been created by ' . Auth::user()->name,
-                ['order_id' => (string)$order->id]
+                ['order_id' => json_decode($order->id)]
             );
 
             return response()->json([
