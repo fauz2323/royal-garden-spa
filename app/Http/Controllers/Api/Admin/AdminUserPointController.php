@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\UserHistoryPoint;
 use App\Models\UserPoint;
 use Illuminate\Http\Request;
@@ -21,19 +22,21 @@ class AdminUserPointController extends Controller
     function addPoints(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'email' => 'required|exists:users,email',
             'points' => 'required|integer',
             'description' => 'nullable|string'
         ]);
 
-        $userPoint = UserPoint::where('user_id', $request->user_id)
+        $user = User::where('email', $request->email)->first();
+
+        $userPoint = UserPoint::where('user_id', $user->id)
             ->first();
 
         $userPoint->points += $request->points;
         $userPoint->save();
 
         $pointHistory = new UserHistoryPoint();
-        $pointHistory->user_id = $request->user_id;
+        $pointHistory->user_id = $user->id;
         $pointHistory->points = $request->points;
         $pointHistory->description = $request->description ?? 'Admin added points';
         $pointHistory->save();
