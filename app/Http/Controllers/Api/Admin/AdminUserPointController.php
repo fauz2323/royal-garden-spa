@@ -11,7 +11,7 @@ class AdminUserPointController extends Controller
 {
     function index()
     {
-        $points = UserPoint::with('user')->orderBy('created_at', 'desc')->get();
+        $points = UserHistoryPoint::with('user')->orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => 'success',
             'data' => $points
