@@ -56,4 +56,28 @@ class MissionAdminController extends Controller
             'data' => $mission
         ]);
     }
+
+    function edit(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'points' => 'required|integer|min:0',
+            'goal' => 'required|integer|min:0',
+        ]);
+
+        $mission = Mission::find($request->id);
+        $mission->title = $request->title;
+        $mission->description = $request->description;
+        $mission->points = $request->points;
+        $mission->goal = $request->goal;
+        $mission->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mission updated successfully',
+            'data' => $mission
+        ]);
+    }
 }

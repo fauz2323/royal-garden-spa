@@ -56,4 +56,28 @@ class VoucherAdminController extends Controller
             'data' => $voucher
         ]);
     }
+
+    function edit(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'price' => 'required|string|max:255',
+            'discount_amount' => 'required|numeric',
+            'expiry_date' => 'required|date',
+        ]);
+
+        $voucher = Voucher::find($request->id);
+        $voucher->name = $request->name;
+        $voucher->price = $request->price;
+        $voucher->discount_amount = $request->discount_amount;
+        $voucher->expiry_date = $request->expiry_date;
+        $voucher->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Voucher updated successfully',
+            'data' => $voucher
+        ]);
+    }
 }
