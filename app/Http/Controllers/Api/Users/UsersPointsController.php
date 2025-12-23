@@ -53,7 +53,7 @@ class UsersPointsController extends Controller
 
     function getVoucherShop()
     {
-        $vouchers = Voucher::where('expiry_date', '>=', date('Y-m-d'))
+        $vouchers = Voucher::where('expiry_date', '>=', date('Y-m-d'))->where('isDelete', 'no')
             ->orderBy('created_at', 'desc')
             ->get();
 

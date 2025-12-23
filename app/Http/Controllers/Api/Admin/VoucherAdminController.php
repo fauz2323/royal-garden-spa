@@ -10,7 +10,9 @@ class VoucherAdminController extends Controller
 {
     function index()
     {
-        $vouchers = Voucher::all();
+        $vouchers = Voucher::where('isDelete', 'no')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json([
             'status' => 'success',
@@ -78,6 +80,22 @@ class VoucherAdminController extends Controller
             'status' => 'success',
             'message' => 'Voucher updated successfully',
             'data' => $voucher
+        ]);
+    }
+
+    function delete(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:vouchers,id',
+        ]);
+
+        $voucher = Voucher::find($request->id);
+        $voucher->isDelete = 'yes';
+        $voucher->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Voucher deleted successfully',
         ]);
     }
 }
