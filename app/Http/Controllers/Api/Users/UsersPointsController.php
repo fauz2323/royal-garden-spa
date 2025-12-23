@@ -161,7 +161,7 @@ class UsersPointsController extends Controller
 
         $id = $request->voucher_id;
         $userVoucher = UserVoucher::where('id', $id)
-            ->where('user_id', Auth::id())
+            ->where('user_id', Auth::id())->with('voucher')
             ->first();
 
         if (!$userVoucher) {
