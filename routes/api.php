@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/points/leaderboards', [UsersPointsController::class, 'leaderboards']);
         Route::get('/points/voucher-shop', [UsersPointsController::class, 'getVoucherShop']);
         Route::get('/points/reward', [UsersPointsController::class, 'reward']);
+        Route::post('/points/use-voucher', [UsersPointsController::class, 'useVoucher']);
+        Route::post('/points/voucher-detail', [UsersPointsController::class, 'voucherDetail']);
         Route::post('/points/redeem-voucher', [UsersPointsController::class, 'reedemVoucher']);
 
         //user missions

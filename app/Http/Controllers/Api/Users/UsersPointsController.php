@@ -117,4 +117,65 @@ class UsersPointsController extends Controller
             'data' => $reward
         ], 200);
     }
+
+    function useVoucher(Request $request)
+    {
+        $request->validate([
+            'voucher_id' => 'required|exists:user_vouchers,id',
+        ]);
+
+        $id = $request->voucher_id;
+        $userVoucher = UserVoucher::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$userVoucher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher not found for this user',
+            ], 404);
+        }
+
+        if ($userVoucher->status == 'used') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher has already been used',
+            ], 400);
+        }
+
+        $userVoucher->status = 'used';
+        $userVoucher->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Voucher used successfully',
+            'data' => $userVoucher
+        ], 200);
+    }
+
+    function voucherDetail(Request $request)
+    {
+        $request->validate([
+            'voucher_id' => 'required|exists:user_vouchers,id',
+        ]);
+
+        $id = $request->voucher_id;
+        $userVoucher = UserVoucher::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$userVoucher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher not found for this user',
+            ], 404);
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Voucher get successfully',
+            'data' => $userVoucher
+        ], 200);
+    }
 }
