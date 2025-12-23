@@ -10,7 +10,9 @@ class MissionAdminController extends Controller
 {
     function index()
     {
-        $missions = Mission::all();
+        $missions = Mission::where('isDelete', 'no')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json([
             'status' => 'success',
@@ -72,6 +74,23 @@ class MissionAdminController extends Controller
         $mission->description = $request->description;
         $mission->points = $request->points;
         $mission->goal = $request->goal;
+        $mission->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mission updated successfully',
+            'data' => $mission
+        ]);
+    }
+
+    function deleteMission(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $mission = Mission::find($request->id);
+        $mission->isDelete = 'yes';
         $mission->save();
 
         return response()->json([
