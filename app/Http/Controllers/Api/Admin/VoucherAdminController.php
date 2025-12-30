@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Voucher;
+use App\Models\UserVoucher;
 use Illuminate\Http\Request;
 
 class VoucherAdminController extends Controller
@@ -97,5 +98,37 @@ class VoucherAdminController extends Controller
             'status' => 'success',
             'message' => 'Voucher deleted successfully',
         ]);
+    }
+
+    function useVoucher(Request $request)
+    {
+        $id = $request->voucher_id;
+        $userId = $request->user_id;
+        $userVoucher = UserVoucher::where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$userVoucher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher not found for this user',
+            ], 404);
+        }
+
+        if ($userVoucher->status == 'used') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher has already been used',
+            ], 400);
+        }
+
+        $userVoucher->status = 'used';
+        $userVoucher->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Voucher used successfully',
+            'data' => $userVoucher
+        ], 200);
     }
 }

@@ -55,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
         //user missions
         Route::get('/mission/index', [App\Http\Controllers\Api\Users\MissionController::class, 'index']);
         Route::get('/missions/claim/{id}', [App\Http\Controllers\Api\Users\MissionController::class, 'claim']);
+
+        //time slot
+        Route::get('/timeslot/available/{date}', [App\Http\Controllers\Api\Users\TimeSlotController::class, 'getTimeSlotList']);
     });
 
     // Admin only routes
@@ -98,6 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/vouchers/detail', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'detail']);
         Route::post('/vouchers/edit', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'edit']);
         Route::post('/vouchers/delete', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'delete']);
+        Route::post('/vouchers/use', [App\Http\Controllers\Api\Admin\VoucherAdminController::class, 'useVoucher']);
 
         //admin user points
         Route::get('points/user-points', [App\Http\Controllers\Api\Admin\AdminUserPointController::class, 'index']);

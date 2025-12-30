@@ -114,9 +114,6 @@ class AdminOrderController extends Controller
             if ($request->status == 'completed') {
                 $user = User::find($order->user_id);
                 if ($user) {
-                    $user->point->points += $order->spa_service->points;
-                    $user->point->save();
-
                     $userHistoryPoints = new UserHistoryPoint();
                     $userHistoryPoints->user_id = $user->id;
                     $userHistoryPoints->points = $order->spa_service->points;
