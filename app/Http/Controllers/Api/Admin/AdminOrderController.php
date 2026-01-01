@@ -31,7 +31,7 @@ class AdminOrderController extends Controller
 
             $query->whereIn('status', $statuses);
 
-            $orders = $query->orderBy('created_at', 'desc')
+            $orders = $query->orderByRaw("CONCAT(date_service, ' ', time_service) ASC")
                 ->get();
 
             return response()->json([
