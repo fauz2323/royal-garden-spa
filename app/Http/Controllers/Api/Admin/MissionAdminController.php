@@ -35,6 +35,8 @@ class MissionAdminController extends Controller
             'description' => $request->description,
             'points' => $request->points,
             'goal' => $request->goal,
+            'expired_date' => $request->expired_date,
+            'services' => $request->services,
         ]);
 
         return response()->json([
@@ -74,6 +76,8 @@ class MissionAdminController extends Controller
         $mission->description = $request->description;
         $mission->points = $request->points;
         $mission->goal = $request->goal;
+        $mission->expired_date = $request->expired_date;
+        $mission->services = $request->services;
         $mission->save();
 
         return response()->json([

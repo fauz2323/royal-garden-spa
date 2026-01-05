@@ -40,7 +40,7 @@ class AdminSpaServiceController extends Controller
             'duration' => $request->duration,
             'is_active' => $request->boolean('is_active', true),
             'image' => $request->image,
-            'points' => $request->points ?? '0'
+            'points' => $request->point ?? '0'
         ]);
 
         return response()->json([
