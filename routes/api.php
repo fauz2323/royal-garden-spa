@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:customer')->prefix('customer')->group(function () {
         Route::get('/services', [UserSpaServiceController::class, 'getServicesList']);
         Route::get('/services/{id}/detail', [UserSpaServiceController::class, 'getServicesDetail']);
+        Route::get('/services/list/{service_id}', [UserSpaServiceController::class, 'getServicesListById']);
 
         // Route::get('/services', [UserOrderController::class, 'getAvailableServices']);
         Route::get('/orders', [UserOrderController::class, 'index']);

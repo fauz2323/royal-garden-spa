@@ -81,10 +81,6 @@ class UsersPointsController extends Controller
             ], 400);
         }
 
-        // Deduct points
-        $points->points -= $voucher->price;
-        $points->save();
-
         $userVoucer = new UserVoucher();
         $userVoucer->user_id = Auth::id();
         $userVoucer->voucher_id = $voucher->id;

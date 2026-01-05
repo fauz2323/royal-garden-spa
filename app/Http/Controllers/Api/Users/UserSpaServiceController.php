@@ -25,4 +25,16 @@ class UserSpaServiceController extends Controller
             'data' => $services
         ]);
     }
+
+    function getServicesListById($service_id)
+    {
+//        $service_id = '1,2,3,11';
+        $serviceIds = explode(',', $service_id);  // [1, 2, 3, 11]
+
+        $services = SpaService::where('is_active', true)->whereIn('id', $serviceIds)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $services
+        ]);
+    }
 }
