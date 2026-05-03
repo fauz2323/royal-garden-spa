@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserPoint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -65,6 +66,48 @@ class UsersController extends Controller
             'success' => true,
             'message' => 'Leaderboard retrieved successfully',
             'data' => $data
+        ], 200);
+    }
+
+    public function createUser(Request $request)
+    {
+        $defaultPassword = "user1234";
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($defaultPassword),
+            'role' => 'customer', // Default role for new users
+        ]);
+
+        $point = UserPoint::create([
+            'user_id' => $user->id,
+            'points' => 0,
+            'status' => 'active',
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully',
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'role' => $user->role,
+                    'created_at' => $user->created_at,
+
+                ],
+                'point' => [
+                    'points' => $point->points,
+                    'status' => $point->status,
+                ],
+                'token' => $token,
+            ]
         ], 200);
     }
 }

@@ -71,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users/detail', [App\Http\Controllers\Api\Admin\UsersController::class, 'detail']);
         Route::get('/users/points', [App\Http\Controllers\Api\Admin\UsersController::class, 'points']);
         Route::get('/users/search', [App\Http\Controllers\Api\Admin\UsersController::class, 'search']);
+        Route::post('/users/create', [App\Http\Controllers\Api\Admin\UsersController::class, 'createUser']);
 
         // Route::apiResource('spa-services', AdminSpaServiceController::class);
         // Route::post('spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
