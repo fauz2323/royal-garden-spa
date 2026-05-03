@@ -6,6 +6,7 @@ use App\Exports\UsersOrdersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminCreateOrderRequest;
 use App\Http\Requests\AdminUpdateOrderRequest;
+use App\Http\Requests\StoreUserOrderRequest;
 use App\Models\UserOrders;
 use App\Models\SpaService;
 use App\Models\User;
@@ -135,6 +136,57 @@ class AdminOrderController extends Controller
             ], 500);
         }
     }
+
+    public function create(Request $request): JsonResponse
+    {
+        try {
+            // Get the spa service to get the price
+            $spaService = SpaService::findOrFail($request->spa_services_id);
+
+            // Check if spa service is active
+            if (!$spaService->is_active) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This spa service is currently not available'
+                ], 400);
+            }
+
+            // Create the order
+            $order = UserOrders::create([
+                'user_id' => $request->user_id,
+                'spa_services_id' => $request->spa_services_id,
+                'price' => $spaService->price + rand(100, 999),
+                'time_service' => $request->time_service,
+                'date_service' => $request->date_service,
+                'notes' => $request->notes ?? '-',
+                'status' => 'pending'
+            ]);
+
+            // Load the relationships for response
+            $order->load(['spa_service', 'user']);
+//
+//            $firebaseService = new firebaseServices();
+//            $firebaseService->sendToTopic(
+//                'admin_notifications',
+//                'New Order Created',
+//                'A new order has been created by ' . $request->user_name,
+//                ['order_id' => json_encode($order->id)]
+//            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order created successfully',
+                'data' => $order
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create order',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     /**
      * Get orders statistics for dashboard.

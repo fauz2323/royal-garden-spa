@@ -22,6 +22,28 @@ class UsersController extends Controller
         ]);
     }
 
+    function search(Request $request)
+    {
+        // Get the search keyword from the request (e.g., ?keyword=john)
+        $keyword = $request->input('keyword');
+
+        $users = User::query()
+            // The 'when' method only executes the closure if $keyword is not empty
+            ->when($keyword, function ($query, $keyword) {
+                // Group the OR conditions inside a closure
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('name', 'LIKE', "%{$keyword}%")
+                        ->orWhere('email', 'LIKE', "%{$keyword}%")
+                        ->orWhere('phone', 'LIKE', "%{$keyword}%");
+                });
+            })
+            // Use paginate() instead of get() if you expect a lot of results
+            ->paginate(20);
+
+        // Return the results as JSON (or pass to a view)
+        return response()->json($users);
+    }
+
     function detail(Request $request)
     {
         $users = User::select('id', 'name', 'email', 'role', 'phone', 'created_at')->with('point')->where('email', $request->email)->first();

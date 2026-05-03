@@ -70,6 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users', [App\Http\Controllers\Api\Admin\UsersController::class, 'index']);
         Route::post('/users/detail', [App\Http\Controllers\Api\Admin\UsersController::class, 'detail']);
         Route::get('/users/points', [App\Http\Controllers\Api\Admin\UsersController::class, 'points']);
+        Route::get('/users/search', [App\Http\Controllers\Api\Admin\UsersController::class, 'search']);
 
         // Route::apiResource('spa-services', AdminSpaServiceController::class);
         // Route::post('spa-services/{id}/toggle-status', [AdminSpaServiceController::class, 'toggleStatus']);
@@ -84,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/orders/{status}', [AdminOrderController::class, 'index']);
         Route::post('/orders/view', [AdminOrderController::class, 'show']);
         Route::post('/orders/changeStatus', [AdminOrderController::class, 'changeStatus']);
+        Route::post('/orders/create', [AdminOrderController::class, 'create']);
         // Route::get('/orders/statistics', [AdminOrderController::class, 'statistics']);
 
         Route::post('update-profile', [AdminSettingsController::class, 'updateProfile']);
@@ -107,5 +109,8 @@ Route::middleware('auth:sanctum')->group(function () {
         //admin user points
         Route::get('points/user-points', [App\Http\Controllers\Api\Admin\AdminUserPointController::class, 'index']);
         Route::post('points/add-points', [App\Http\Controllers\Api\Admin\AdminUserPointController::class, 'addPoints']);
+
+        //admin time
+        Route::get('timeslot/available/{date}', [App\Http\Controllers\Api\Admin\AdminTimeSlotController::class, 'getTimeSlotList']);
     });
 });
