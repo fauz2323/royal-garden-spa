@@ -32,8 +32,8 @@ class AdminUserPointController extends Controller
         $userPoint = UserPoint::where('user_id', $user->id)
             ->first();
 
-        $userPoint->points += $request->points;
-        $userPoint->save();
+//        $userPoint->points += $request->points;
+//        $userPoint->save();
 
         $pointHistory = new UserHistoryPoint();
         $pointHistory->user_id = $user->id;
