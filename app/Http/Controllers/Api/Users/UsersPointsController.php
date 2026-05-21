@@ -9,6 +9,7 @@ use App\Models\UserVoucher;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UsersPointsController extends Controller
 {
@@ -39,9 +40,17 @@ class UsersPointsController extends Controller
 
     function leaderboards()
     {
-        $data = UserPoint::with('user')
-            ->orderBy('points', 'desc')
-            ->take(10)
+//        $data = UserPoint::with('user')
+//            ->orderBy('points', 'desc')
+//            ->take(10)
+//            ->get();
+
+        $data = UserHistoryPoint::select('user_id', DB::raw('SUM(points) as total_points'))
+            ->where('created_at', '>=', now()->startOfMonth())
+            ->groupBy('user_id')
+            ->orderByDesc('total_points')
+            ->take(3)
+            ->with('user') // Optional: Eager load user details if the relationship is defined
             ->get();
 
         return response()->json([
