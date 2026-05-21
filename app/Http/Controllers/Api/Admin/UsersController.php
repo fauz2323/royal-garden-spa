@@ -39,7 +39,7 @@ class UsersController extends Controller
                 });
             })
             // Use paginate() instead of get() if you expect a lot of results
-            ->paginate(20);
+            ->paginate(200);
 
         // Return the results as JSON (or pass to a view)
         return response()->json($users);
