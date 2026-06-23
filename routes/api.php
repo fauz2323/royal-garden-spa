@@ -70,6 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users', [App\Http\Controllers\Api\Admin\UsersController::class, 'index']);
         Route::post('/users/detail', [App\Http\Controllers\Api\Admin\UsersController::class, 'detail']);
         Route::post('/users/order', [App\Http\Controllers\Api\Admin\UsersController::class, 'historyorder']);
+        Route::post('/users/historypoint', [App\Http\Controllers\Api\Admin\UsersController::class, 'historypoint']);
         Route::get('/users/points', [App\Http\Controllers\Api\Admin\UsersController::class, 'points']);
         Route::get('/users/leaderboards', [App\Http\Controllers\Api\Admin\UsersController::class, 'leaderboards']);
         Route::get('/users/search', [App\Http\Controllers\Api\Admin\UsersController::class, 'search']);

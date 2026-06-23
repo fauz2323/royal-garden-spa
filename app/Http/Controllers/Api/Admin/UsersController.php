@@ -155,4 +155,17 @@ class UsersController extends Controller
         }
     }
 
+    function historypoint(Request $request)
+    {
+        $history = UserHistoryPoint::where('user_id', $request->user_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User points history retrieved successfully',
+            'data' => $history
+        ], 200);
+    }
+
 }
