@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserHistoryPoint;
+use App\Models\UserOrders;
 use App\Models\UserPoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -130,4 +131,28 @@ class UsersController extends Controller
             'data' => $data
         ], 200);
     }
+
+
+    function historyorder(Request $request)
+    {
+        try {
+            $orders = UserOrders::with(['spa_service'])
+                ->where('user_id', $request->user_id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Orders retrieved successfully',
+                'data' => $orders
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve orders',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
