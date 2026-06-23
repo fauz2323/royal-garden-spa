@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserHistoryPoint;
 use App\Models\UserPoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -108,6 +110,24 @@ class UsersController extends Controller
                 ],
                 'token' => $token,
             ]
+        ], 200);
+    }
+
+    function leaderboards()
+    {
+
+        $data = UserHistoryPoint::select('user_id', DB::raw('SUM(points) as total_points'))
+            ->where('created_at', '>=', now()->startOfMonth())
+            ->groupBy('user_id')
+            ->orderByDesc('total_points')
+            ->take(3)
+            ->with('user') // Optional: Eager load user details if the relationship is defined
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Leaderboard retrieved successfully',
+            'data' => $data
         ], 200);
     }
 }
