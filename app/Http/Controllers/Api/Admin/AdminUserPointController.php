@@ -39,6 +39,7 @@ class AdminUserPointController extends Controller
         $pointHistory->user_id = $user->id;
         $pointHistory->points = $request->points;
         $pointHistory->description = $request->description ?? 'Admin added points';
+        $pointHistory->created_at = now('Asia/Jakarta');
         $pointHistory->save();
 
         return response()->json([

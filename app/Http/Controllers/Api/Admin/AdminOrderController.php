@@ -97,7 +97,7 @@ class AdminOrderController extends Controller
     {
         $request->validate([
             'id' => 'required|integer|exists:user_orders,id',
-            'status' => 'required|string|in:confirmed,in_progress,completed,rejected'
+            'status' => 'required|string|in:confirmed,cancelled,in_progress,completed,rejected'
         ]);
 
         try {
